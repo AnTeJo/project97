@@ -7,7 +7,8 @@ import com.example.project97.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -16,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PaymentService {
@@ -31,26 +33,24 @@ public class PaymentService {
 //        this.paymentRepository = paymentRepository;
 //    }
 
-    public Payment findById(Long id) throws ResourceNotFoundException {
-      Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found for this id: " + id));
-              return payment;
+    public Payment findById(Long paymentId) throws ResourceNotFoundException {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found for this id: " + paymentId));
+        return payment;
     }
 
     public Payment createPayment(Payment payment) throws ConstraintException, Exception {
         try {
             return this.paymentRepository.save(payment);
-        }
-        catch(DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new ConstraintException("Constraint Problem - " + e.getMostSpecificCause().getMessage());
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             throw new Exception("Unknown error :( but i know some details that could help: " + e.getMessage());
         }
     }
 
     public Payment updatePayment(Long id, Payment paymentDetails) throws ResourceNotFoundException {
-        Payment payment = getPaymentById(id);
+        Payment payment = findById(id);
 
         payment.setCardNumber(paymentDetails.getCardNumber());
         payment.setCardHolderName(paymentDetails.getCardHolderName());
@@ -60,19 +60,21 @@ public class PaymentService {
 
         return paymentRepository.save(payment);
     }
+
+
     public Payment addPayment(Payment payment) throws Exception {
         // Проверяем, что payment не является пустым
-        if(payment == null) {
+        if (payment == null) {
             throw new IllegalArgumentException("Payment cannot be null");
         }
 
         // Проверяем, что все обязательные поля заполнены
-        if(payment.getAmount() == null || payment.getCardNumber() == null || payment.getCardHolderName() == null || payment.getExpirationDate() == null || payment.getCvvCode() == null) {
+        if (payment.getAmount() == null || payment.getCardNumber() == null || payment.getCardHolderName() == null || payment.getExpirationDate() == null || payment.getCvvCode() == null) {
             throw new IllegalArgumentException("Payment must have a non-null amount, card number, card holder name, expiry date and CVV");
         }
 
         // Проверяем, что номер карты введен корректно
-        if(!validateCard(payment.getCardNumber())) {
+        if (!validateCard(payment.getCardNumber())) {
             throw new IllegalArgumentException("Invalid card number");
         }
 
@@ -86,6 +88,7 @@ public class PaymentService {
 
         return savedPayment;
     }
+
     private boolean validateCard(String cardNumber) {
         // Проверка длины номера карты
         if (cardNumber.length() != 16) {
@@ -124,6 +127,17 @@ public class PaymentService {
         byte[] encryptedData = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
         return Base64.getEncoder().encodeToString(encryptedData);
     }
+
+
+    // Метод в PaymentService для проверки подлинности по CVV Code
+//    public boolean verifyCvv(Long id, String cvv) {
+//        Optional<Payment> paymentOptional = paymentRepository.findById(id);
+//        if (paymentOptional.isPresent()) {
+//            Payment payment = paymentOptional.get();
+//            return payment.getCardCvv().equals(cvv);
+//        }
+//        return false;
+//    }
     private String decrypt(String data) {
         try {
             final String secretKey = "mySecretKey123";
@@ -140,15 +154,16 @@ public class PaymentService {
     }
 
 
-    public void deletePayment(Long id) throws ResourceNotFoundException {
-        Payment payment = getPaymentById(id);
-        paymentRepository.delete(payment);
-    }
+//    public void deletePayment(Long id) throws ResourceNotFoundException {
+//        Payment payment = getPaymentById(id);
+//        paymentRepository.delete(payment);
+//    }
 
-    @Transactional
-    public void processPayment(Long id) throws ResourceNotFoundException {
-        Payment payment = getPaymentById(id);
-        // Реализация метода processPayment() (обработка транзакции)
-        // ...
-    }
+//    @Transactional
+//    public void processPayment(Long id) throws ResourceNotFoundException {
+//        Payment payment = getPaymentById(id);
+    // Реализация метода processPayment() (обработка транзакции)
+    // ...
+//    }
+//}
 }

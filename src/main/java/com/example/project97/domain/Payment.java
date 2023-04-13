@@ -3,10 +3,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
-import jakarta.persistence.Id;
-import lombok.Data;
 
-import javax.persistence.*;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import javax.persistence.Column;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
@@ -78,4 +79,5 @@ public class Payment {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
+
 }

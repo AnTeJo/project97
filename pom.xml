@@ -142,7 +142,7 @@
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>project97</artifactId>
+                <artifactId>com.example.project97</artifactId>
             </plugin>
         </plugins>
     </build>

@@ -42,10 +42,10 @@ public class PaymentController {
 //    }
 
 
-
-    @DeleteMapping("/payments/{id}")
-    public ResponseEntity<Void> deletePayment(@PathVariable Long id) throws ResourceNotFoundException {
-        paymentService.deletePayment(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+//
+//    @DeleteMapping("/payments/{id}")
+//    public ResponseEntity<Void> deletePayment(@PathVariable Long id) throws ResourceNotFoundException {
+//        paymentService.deletePayment(id);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
 }
