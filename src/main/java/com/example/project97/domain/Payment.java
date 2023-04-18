@@ -1,35 +1,27 @@
 package com.example.project97.domain;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
-
-import lombok.Data;
-import org.springframework.data.annotation.Id;
-import javax.persistence.Column;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "payments")
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "card_number")
+//    @Column(name = "card_number")
     private String cardNumber;
 
-    @Column(name = "card_name")
+//    @Column(name = "card_name")
     private String cardHolderName;
 
-    @Column(name = "card_expiry")
+//    @Column(name = "card_expiry")
     private String expirationDate;
 
-    @Column(name = "card_cvv")
+//    @Column(name = "card_cvv")
     private String cvvCode;
 
-    @Column(name = "card_amount")
+//    @Column(name = "card_amount")
     private BigDecimal amount;
 
 
